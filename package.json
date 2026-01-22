@@ -1,0 +1,17 @@
+{
+  "name": "bitburner-files",
+  "version": "1.0.0",
+  "description": "My scripts for the game Bitburner.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx bitburner-filesync"
+  },
+  "keywords": [],
+  "author": "James Lee",
+  "license": "MIT",
+  "packageManager": "pnpm@10.15.1",
+  "devDependencies": {
+    "@types/node": "^25.0.10",
+    "typescript": "^5.9.3"
+  }
+}
