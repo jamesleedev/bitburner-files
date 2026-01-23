@@ -1,13 +1,28 @@
 import { getNodes } from 'neighbours/utils';
+import type { Flags } from '../utils/flags';
+
+const FLAGS: Flags = [
+  ['script', ''],
+  ['target', ''],
+  ['depth', 1],
+  ['host', ''],
+  ['kill', false],
+];
+
+export function autocomplete(data: AutocompleteData, args: string[]): string[] {
+  const servers = data.servers;
+  const scripts = data.scripts;
+  data.flags(FLAGS);
+
+  if (args.length === 0) {
+    return [];
+  }
+
+  return [...servers, ...scripts];
+}
 
 export async function main(ns: NS) {
-  const cmdFlags = ns.flags([
-    ['script', ''],
-    ['target', ''],
-    ['depth', 1],
-    ['host', ''],
-    ['kill', false],
-  ]);
+  const cmdFlags = ns.flags(FLAGS);
   const scriptName = cmdFlags.script as string;
   const target = cmdFlags.target as string;
   const depth = cmdFlags.depth as number;

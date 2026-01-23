@@ -1,5 +1,11 @@
 export type CmdFlags = Record<string, ScriptArg | string[]>;
 
+export type Flags = [string, string | number | boolean | string[]][];
+
+export const RAM_VALUES = [
+  2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576,
+];
+
 export function getHostFlag(
   ns: NS,
   cmdFlags: CmdFlags,
@@ -16,7 +22,9 @@ export function getHostFlag(
 
       return Array.isArray(arg) ? (arg[0] as string) : (arg as string);
     })
-    .filter((arg) => arg !== '');
+    .filter((arg) => {
+      return arg && arg !== '';
+    });
 
   if (hostArgs.length === 0) {
     if (printError) {

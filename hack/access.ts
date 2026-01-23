@@ -1,5 +1,6 @@
 import { getNodes } from 'neighbours/utils';
 import { COLORS } from 'utils/colors';
+import type { Flags } from '../utils/flags';
 
 interface Cracks {
   [key: string]: {
@@ -8,12 +9,20 @@ interface Cracks {
   };
 }
 
+const FLAGS: Flags = [
+  ['mock', false],
+  ['d', -1],
+  ['depth', 1],
+];
+
+export function autocomplete(data: AutocompleteData, args: string[]): string[] {
+  data.flags(FLAGS);
+
+  return [];
+}
+
 export async function main(ns: NS) {
-  const cmdFlags = ns.flags([
-    ['mock', false],
-    ['d', -1],
-    ['depth', 1],
-  ]);
+  const cmdFlags = ns.flags(FLAGS);
 
   const mock = cmdFlags.mock;
   const depth = Math.max(cmdFlags.d as number, cmdFlags.depth as number);

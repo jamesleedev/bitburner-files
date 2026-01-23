@@ -1,22 +1,44 @@
 import { COLORS } from 'utils/colors';
-import { getHostFlag, printMissingHostError, isPowerOfTwo } from 'utils/flags';
+import { type Flags, getHostFlag, printMissingHostError, isPowerOfTwo, RAM_VALUES } from 'utils/flags';
+
+const FLAGS: Flags = [
+  ['rename', false],
+  ['buy', false],
+  ['info', false],
+  ['upgrade', false],
+  ['old', ''],
+  ['new', ''],
+  ['h', ''],
+  ['host', ''],
+  ['count', -1],
+  ['all', false],
+  ['ram', -1],
+  ['original', -1],
+  ['dry-run', false],
+];
+
+export function autocomplete(data: AutocompleteData, args: string[]): string[] {
+  const servers = data.servers;
+  const flags = data.flags(FLAGS);
+
+  const ramFlags = ['--ram', '--original'];
+  const hostFlags = ['-h', '--host'];
+
+  const lastArg = args.slice(-1)[0];
+
+  if (lastArg && (ramFlags.includes(lastArg) || Number.isInteger(parseInt(lastArg)))) {
+    return RAM_VALUES.map((n) => n.toString());
+  }
+
+  if (lastArg && hostFlags.includes(lastArg)) {
+    return servers;
+  }
+
+  return [];
+}
 
 export async function main(ns: NS) {
-  const cmdFlags = ns.flags([
-    ['rename', false],
-    ['buy', false],
-    ['info', false],
-    ['upgrade', false],
-    ['old', ''],
-    ['new', ''],
-    ['h', ''],
-    ['host', ''],
-    ['count', -1],
-    ['all', false],
-    ['ram', -1],
-    ['original', -1],
-    ['dry-run', false],
-  ]);
+  const cmdFlags = ns.flags(FLAGS);
 
   const host = getHostFlag(ns, cmdFlags);
   const count = cmdFlags.count as number;

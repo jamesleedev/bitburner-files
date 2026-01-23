@@ -1,11 +1,21 @@
 import { COLORS } from 'utils/colors';
-import { getHostFlag } from 'utils/flags';
+import { getHostFlag, type Flags } from 'utils/flags';
+
+const FLAGS: Flags = [
+  ['host', ''],
+  ['h', ''],
+];
+
+export function autocomplete(data: AutocompleteData, args: string[]): string[] {
+  const servers = data.servers;
+  const flags = data.flags(FLAGS);
+
+  // return [...servers];
+  return servers;
+}
 
 export async function main(ns: NS) {
-  const cmdFlags = ns.flags([
-    ['host', ''],
-    ['h', ''],
-  ]);
+  const cmdFlags = ns.flags(FLAGS);
 
   const host = getHostFlag(ns, cmdFlags, true, true);
 
