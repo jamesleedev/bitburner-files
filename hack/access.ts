@@ -1,6 +1,6 @@
-import { getNodes } from 'neighbours/utils';
+import { getNodes } from 'utils/neighbours';
 import { COLORS } from 'utils/colors';
-import type { Flags } from '../utils/flags';
+import type { Flags } from 'utils/flags';
 
 interface Cracks {
   [key: string]: {

@@ -1,5 +1,5 @@
-import { getNodes } from 'neighbours/utils';
-import type { Flags } from '../utils/flags';
+import { getNodes } from 'utils/neighbours';
+import type { Flags } from 'utils/flags';
 
 const FLAGS: Flags = [
   ['script', ''],
