@@ -5,16 +5,18 @@ export async function main(ns: NS) {
     ['script', ''],
     ['target', ''],
     ['depth', 1],
-    ['base', ''],
+    ['host', ''],
+    ['kill', false],
   ]);
   const scriptName = cmdFlags.script as string;
   const target = cmdFlags.target as string;
   const depth = cmdFlags.depth as number;
-  const base = cmdFlags.base as string;
+  const singleHost = cmdFlags.host as string;
+  const killAll = cmdFlags.kill as boolean;
 
   const nodes =
-    base && base !== ''
-      ? [base]
+    singleHost && singleHost !== ''
+      ? [singleHost]
       : getTree(ns, depth).map((n) => {
           return n.host;
         });
@@ -35,14 +37,26 @@ export async function main(ns: NS) {
 
   for (const host of nodes) {
     if (ns.hasRootAccess(host) && host !== 'home') {
-      const instances = Math.floor(ns.getServerMaxRam(host) / ns.getScriptRam(scriptName));
+      let instances: number = 0;
+      const scriptRam = ns.getScriptRam(scriptName);
+      const server: Record<string, any> = {
+        maxRam: ns.getServerMaxRam(host),
+        usedRam: ns.getServerUsedRam(host),
+      };
+      server.freeRam = server.maxRam - server.usedRam;
+
       //ns.tprint(`INFO Host: ${host}`)
       //ns.tprint(`INFO Instances: ${instances}`)
       //ns.tprint(`INFO Host Max RAM: ${ns.getServerMaxRam(host)}`)
       //ns.tprint(`INFO Script RAM: ${ns.getScriptRam(scriptName)}`)
 
-      ns.killall(host);
-      ns.tprint(`SUCCESS ${host}: killing all scripts`);
+      if (killAll) {
+        ns.killall(host);
+        ns.tprint(`SUCCESS ${host}: killing all scripts`);
+        instances = Math.floor(server.maxRam / scriptRam);
+      } else {
+        instances = Math.floor(server.freeRam / scriptRam);
+      }
 
       ns.scp(scriptName, host);
       ns.tprint(`SUCCESS ${host}: copying latest script`);
