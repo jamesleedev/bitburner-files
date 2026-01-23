@@ -20,6 +20,7 @@ export async function main(ns: NS) {
     moneyMax: ns.getServerMaxMoney(host),
     moneyAvail: ns.getServerMoneyAvailable(host),
     moneyPerHack: ns.hackAnalyze(host),
+    hackTime: ns.getHackTime(host),
     growthTime: ns.getGrowTime(host),
     growthMultiplier: ns.getServerGrowth(host),
     growNeeded10per: ns.growthAnalyze(host, 1.1),
@@ -63,6 +64,7 @@ export async function main(ns: NS) {
   ns.tprintf(`* Money Max: $${ns.formatNumber(server.moneyMax)}`);
   ns.tprintf(`* Money Available: $${ns.formatNumber(server.moneyAvail)} (%v)`, ns.formatPercent(moneyPercent));
   ns.tprintf(`* Money Per Hack: $${ns.formatNumber(server.moneyPerHack)}`);
+  ns.tprintf(`* Hack Time: ${ns.tFormat(server.hackTime)}`);
 
   ns.tprintf(`${COLORS.MAGENTA}### Growth${COLORS.RESET}`);
   ns.tprintf(`* Growth Time: ${ns.tFormat(server.growthTime)}`);
