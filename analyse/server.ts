@@ -33,7 +33,10 @@ export async function main(ns: NS) {
     hackSecurity: ns.hackAnalyzeSecurity(1, host),
   };
 
-  const remainingGrowth = ns.growthAnalyze(host, server.moneyMax / server.moneyAvail);
+  const remainingGrowth = ns.growthAnalyze(
+    host,
+    Number.isFinite(server.moneyMax / server.moneyAvail) ? server.moneyMax / server.moneyAvail : 1
+  );
   const moneyRatio = server.moneyAvail / server.moneyMax;
   const moneyPercent = Number.isFinite(moneyRatio) && !Number.isNaN(moneyRatio) ? moneyRatio : 0;
 
@@ -78,6 +81,9 @@ export async function main(ns: NS) {
   ns.tprintf(`* Current Security Level: ${server.securityCurr}`);
   ns.tprintf(`* Weaken Time: ${ns.tFormat(server.weakenTime)}`);
   ns.tprintf(`* Weaken Amount per Thread: ${server.weakenPerThread}`);
+  ns.tprintf(
+    `* Threads needed to fully weaken: ${(server.securityCurr - server.securityMin) / server.weakenPerThread}`
+  );
   ns.tprintf(
     `${server.growSecurity > server.weakenPerThread ? COLORS.RED : COLORS.GREEN}* Security Increase with Grow: ${server.growSecurity}`
   );

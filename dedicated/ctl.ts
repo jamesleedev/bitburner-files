@@ -100,6 +100,8 @@ function buy(ns: NS, ram: number, count: number = 1, all: boolean = false, mock:
       ns.tprint(
         `ERROR: Insufficient balance. Current: ${balance}, Cost(count/single): ${ns.formatNumber(cost * count)}/${ns.formatNumber(cost)}`
       );
+
+      return;
     }
 
     const budget = Math.min(avail, count);
