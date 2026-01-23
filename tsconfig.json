@@ -39,7 +39,7 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "include": ["NetScriptDefinitions.d.ts", "**/*.ts", "**/*.d.ts"],
+  "include": ["NetScriptDefinitions.d.ts", "**/*.ts", "**/*.d.ts"]
 }

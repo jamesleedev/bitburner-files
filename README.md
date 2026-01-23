@@ -8,7 +8,6 @@ Basically any version of Node which works with version of typescript in package.
 
 Also pnpm 10.28.1, but corepack will sort that out for you.
 
-
 ## Installation
 
 If you have nvm installed:
@@ -39,6 +38,7 @@ pnpm start
 ```
 
 When in game:
+
 1. Go to Settings
 2. Go to 'Remote API'
 3. Enter `12525` as the port, click connect
@@ -50,7 +50,7 @@ When in game:
 
 #### scan.ts
 
-*WIP*
+_WIP_
 
 This is a WIP file to replace `scan-analyze` in game.
 
@@ -78,7 +78,7 @@ Gets all nodes within a given depth, checks requirements, opens ports where nece
 
 #### propogate.ts
 
-1. Takes a given script, target, and depth 
+1. Takes a given script, target, and depth
 2. `scp` the script to all servers with root access within the depth
 3. executes script with target as argument.
 
@@ -90,13 +90,13 @@ Basic hacking template in beginners tutorial.
 
 #### hack.ts
 
-*Depreciated*
+_Depreciated_
 
 Used before hack/access.ts with immediate neighbours only.
 
 #### propogate.ts
 
-*Deprecated*
+_Deprecated_
 
 Used before hack/propogate.ts with immediate neighbours only.
 

@@ -1,9 +1,9 @@
-import { getHostFlag } from "../utils/flags";
+import { getHostFlag } from 'utils/flags';
 
 export async function main(ns: NS) {
   const cmdFlags = ns.flags([
-    ["host", ""],
-    ["h", ""],
+    ['host', ''],
+    ['h', ''],
   ]);
 
   const target = getHostFlag(ns, cmdFlags, true, true);

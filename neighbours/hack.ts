@@ -4,19 +4,19 @@ const COLORS = {
   YELLOW: '\u001b[33m',
   CYAN: '\u001b[36m',
   RESET: '\u001b[0m',
-}
+};
 
 interface Cracks {
   [key: string]: {
     available: boolean;
     func: (host: string) => boolean;
-  }
+  };
 }
 
 export async function main(ns: NS) {
   const mock = ns.args.length >= 2 && ns.args[1] === 'mock';
 
-  const base = ns.args.length >= 1 && typeof ns.args[0] === "string" ? ns.args[0] : 'home';
+  const base = ns.args.length >= 1 && typeof ns.args[0] === 'string' ? ns.args[0] : 'home';
 
   const cracks = getPortCracks(ns);
   const cracksAvail = Object.entries(cracks).filter((crack) => {
@@ -49,9 +49,14 @@ export async function main(ns: NS) {
     const needPorts = portsRequired > portsAvailable;
     const canHack = hackingLevelRequired <= hackingLevel;
 
-    ns.tprintf(needPorts ? `${COLORS.YELLOW}- ports: %v${COLORS.RESET}` : `${COLORS.GREEN}- ports: %v${COLORS.RESET}`, portsRequired);
-    ns.tprintf(canHack ? `${COLORS.GREEN}- level: %v${COLORS.RESET}` : `${COLORS.YELLOW}- level: %v${COLORS.RESET}`, hackingLevelRequired);
-
+    ns.tprintf(
+      needPorts ? `${COLORS.YELLOW}- ports: %v${COLORS.RESET}` : `${COLORS.GREEN}- ports: %v${COLORS.RESET}`,
+      portsRequired
+    );
+    ns.tprintf(
+      canHack ? `${COLORS.GREEN}- level: %v${COLORS.RESET}` : `${COLORS.YELLOW}- level: %v${COLORS.RESET}`,
+      hackingLevelRequired
+    );
 
     if (!hasRoot && !needPorts && canHack) {
       if (mock) {
@@ -62,12 +67,12 @@ export async function main(ns: NS) {
           crack[1].func(host);
           ns.tprintf(`${COLORS.GREEN}# Opening ${crack[0]}${COLORS.RESET}`);
         }
-        
+
         ns.nuke(host);
         ns.tprintf(`${COLORS.GREEN}# Nuking${COLORS.RESET}`);
       }
     } else {
-      ns.tprintf(`${COLORS.RED}# Missing requirements${COLORS.RESET}`)
+      ns.tprintf(`${COLORS.RED}# Missing requirements${COLORS.RESET}`);
     }
 
     ns.tprintf('\n++++++++++\n\n');
@@ -96,5 +101,5 @@ function getPortCracks(ns: NS): Cracks {
       available: ns.fileExists('SQLInject.exe', 'home'),
       func: ns.sqlinject,
     },
-  }
+  };
 }

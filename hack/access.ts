@@ -5,7 +5,7 @@ interface Cracks {
   [key: string]: {
     available: boolean;
     func: (host: string) => boolean;
-  }
+  };
 }
 
 export async function main(ns: NS) {
@@ -24,7 +24,7 @@ export async function main(ns: NS) {
   });
 
   const nodes = getTree(ns, depth).map((n) => {
-    return n.host
+    return n.host;
   });
   const hackingLevel = ns.getHackingLevel();
   const portsAvailable = Object.values(cracks).reduce((prev, curr) => {
@@ -37,14 +37,15 @@ export async function main(ns: NS) {
     if (host === 'home') {
       continue;
     }
-    
+
     const hasRoot = ns.hasRootAccess(host);
     const portsRequired = ns.getServerNumPortsRequired(host);
     const hackingLevelRequired = ns.getServerRequiredHackingLevel(host);
     const serverMaxMoney = ns.getServerMaxMoney(host);
     const serverCurrentMoney = ns.getServerMoneyAvailable(host);
     const serverMoneyRatio = serverCurrentMoney / serverMaxMoney;
-    const serverMoneyPercent = Number.isFinite(serverMoneyRatio) && !Number.isNaN(serverMoneyRatio) ? serverMoneyRatio : 0; 
+    const serverMoneyPercent =
+      Number.isFinite(serverMoneyRatio) && !Number.isNaN(serverMoneyRatio) ? serverMoneyRatio : 0;
     const serverMaxRam = ns.getServerMaxRam(host);
     const securityMin = ns.getServerMinSecurityLevel(host);
     const securityCurr = ns.getServerSecurityLevel(host);
@@ -66,9 +67,14 @@ export async function main(ns: NS) {
     const needPorts = portsRequired > portsAvailable;
     const canHack = hackingLevelRequired <= hackingLevel;
 
-    ns.tprintf(needPorts ? `${COLORS.YELLOW}- ports: %v${COLORS.RESET}` : `${COLORS.GREEN}- ports: %v${COLORS.RESET}`, portsRequired);
-    ns.tprintf(canHack ? `${COLORS.GREEN}- level: %v${COLORS.RESET}` : `${COLORS.YELLOW}- level: %v${COLORS.RESET}`, hackingLevelRequired);
-
+    ns.tprintf(
+      needPorts ? `${COLORS.YELLOW}- ports: %v${COLORS.RESET}` : `${COLORS.GREEN}- ports: %v${COLORS.RESET}`,
+      portsRequired
+    );
+    ns.tprintf(
+      canHack ? `${COLORS.GREEN}- level: %v${COLORS.RESET}` : `${COLORS.YELLOW}- level: %v${COLORS.RESET}`,
+      hackingLevelRequired
+    );
 
     if (!hasRoot && !needPorts && canHack) {
       if (mock) {
@@ -79,12 +85,12 @@ export async function main(ns: NS) {
           crack[1].func(host);
           ns.tprintf(`${COLORS.GREEN}# Opening ${crack[0]}${COLORS.RESET}`);
         }
-        
+
         ns.nuke(host);
         ns.tprintf(`${COLORS.GREEN}# Nuking${COLORS.RESET}`);
       }
     } else {
-      ns.tprintf(`${COLORS.RED}# Missing requirements${COLORS.RESET}`)
+      ns.tprintf(`${COLORS.RED}# Missing requirements${COLORS.RESET}`);
     }
 
     ns.tprintf('\n++++++++++\n\n');
@@ -113,5 +119,5 @@ function getPortCracks(ns: NS): Cracks {
       available: ns.fileExists('SQLInject.exe', 'home'),
       func: ns.sqlinject,
     },
-  }
+  };
 }
