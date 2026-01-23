@@ -198,14 +198,7 @@ interface TailProperties {
  *
  * Use React.createElement to make the ReactElement type, see {@link https://react.dev/reference/react/createElement#creating-an-element-without-jsx | creating an element without jsx} from the official React documentation.
  */
-type ReactNode =
-  | ReactElement
-  | string
-  | number
-  | null
-  | undefined
-  | boolean
-  | ReactNode[];
+type ReactNode = ReactElement | string | number | null | undefined | boolean | ReactNode[];
 
 /**
  * @public
@@ -214,10 +207,7 @@ type ReactNode =
  * See {@link https://react.dev/reference/react/createElement#creating-an-element-without-jsx | creating an element without jsx} from the official React documentation.
  */
 interface ReactElement {
-  type:
-    | string
-    | ((props: any) => ReactElement | null)
-    | (new (props: any) => object);
+  type: string | ((props: any) => ReactElement | null) | (new (props: any) => object);
   props: any;
   key: string | number | null;
 }
@@ -1083,11 +1073,7 @@ type SleeveBladeburnerTask = {
 /** @public */
 type SleeveClassTask = {
   type: "CLASS";
-  classType:
-    | UniversityClassType
-    | GymType
-    | `${UniversityClassType}`
-    | `${GymType}`;
+  classType: UniversityClassType | GymType | `${UniversityClassType}` | `${GymType}`;
   location: LocationName | `${LocationName}`;
 };
 
@@ -1498,13 +1484,7 @@ export interface TIX {
    * @param pos - Specifies whether the order is a “Long” or “Short” position.
    * @returns True if the order is successfully placed, and false otherwise.
    */
-  placeOrder(
-    sym: string,
-    shares: number,
-    price: number,
-    type: string,
-    pos: string,
-  ): boolean;
+  placeOrder(sym: string, shares: number, price: number, type: string, pos: string): boolean;
 
   /**
    * Cancel order for stocks.
@@ -1521,13 +1501,7 @@ export interface TIX {
    * @param type - Type of order.
    * @param pos - Specifies whether the order is a “Long” or “Short” position.
    */
-  cancelOrder(
-    sym: string,
-    shares: number,
-    price: number,
-    type: string,
-    pos: string,
-  ): void;
+  cancelOrder(sym: string, shares: number, price: number, type: string, pos: string): void;
 
   /**
    * Returns your order book for the stock market.
@@ -1794,13 +1768,7 @@ export interface GraftingTask extends BaseTask {
  *
  * @public
  */
-export type Task =
-  | StudyTask
-  | CompanyWorkTask
-  | CreateProgramWorkTask
-  | CrimeTask
-  | FactionWorkTask
-  | GraftingTask;
+export type Task = StudyTask | CompanyWorkTask | CreateProgramWorkTask | CrimeTask | FactionWorkTask | GraftingTask;
 
 /**
  * Default value:
@@ -1901,30 +1869,26 @@ export interface Singularity {
   ): boolean;
 
   /**
-     * Workout at the gym.
-     *
-     * @remarks
-     * RAM cost: 2 GB * 16/4/1
-     *
+   * Workout at the gym.
+   *
+   * @remarks
+   * RAM cost: 2 GB * 16/4/1
+   *
 
-     * This function will automatically set you to start working out at a gym to train
-     * a particular stat. If you are already in the middle of some “working” action
-     * (such as working at a company, for a faction, or on a program), then running
-     * this function will automatically cancel that action and give you your earnings.
-     *
-     * The cost and experience gains for all of these gyms are the same as if you were
-     * to manually visit these gyms and train
-     *
-     * @param gymName - Name of gym. You must be in the correct city for whatever gym you specify.
-     * @param stat - The stat you want to train.
-     * @param focus - Acquire player focus on this gym workout. Optional. Defaults to true.
-     * @returns True if action is successfully started, false otherwise.
-     */
-  gymWorkout(
-    gymName: GymLocationName | `${GymLocationName}`,
-    stat: GymType | `${GymType}`,
-    focus?: boolean,
-  ): boolean;
+   * This function will automatically set you to start working out at a gym to train
+   * a particular stat. If you are already in the middle of some “working” action
+   * (such as working at a company, for a faction, or on a program), then running
+   * this function will automatically cancel that action and give you your earnings.
+   *
+   * The cost and experience gains for all of these gyms are the same as if you were
+   * to manually visit these gyms and train
+   *
+   * @param gymName - Name of gym. You must be in the correct city for whatever gym you specify.
+   * @param stat - The stat you want to train.
+   * @param focus - Acquire player focus on this gym workout. Optional. Defaults to true.
+   * @returns True if action is successfully started, false otherwise.
+   */
+  gymWorkout(gymName: GymLocationName | `${GymLocationName}`, stat: GymType | `${GymType}`, focus?: boolean): boolean;
 
   /**
    * Travel to another city.
@@ -2194,10 +2158,7 @@ export interface Singularity {
    * @param field - Field to which you want to apply.
    * @returns Job name if the player successfully get a job/promotion, and null otherwise.
    */
-  applyToCompany(
-    companyName: CompanyName | `${CompanyName}`,
-    field: JobField | `${JobField}`,
-  ): JobName | null;
+  applyToCompany(companyName: CompanyName | `${CompanyName}`, field: JobField | `${JobField}`): JobName | null;
 
   /**
    * Get company reputation.
@@ -2345,11 +2306,7 @@ export interface Singularity {
    * @param focus - Acquire player focus on this work operation. Optional. Defaults to true.
    * @returns True if the player starts working, and false otherwise.
    */
-  workForFaction(
-    faction: string,
-    workType: FactionWorkType | `${FactionWorkType}`,
-    focus?: boolean,
-  ): boolean;
+  workForFaction(faction: string, workType: FactionWorkType | `${FactionWorkType}`, focus?: boolean): boolean;
 
   /**
    * Get the work types of a faction.
@@ -2818,11 +2775,7 @@ export interface Singularity {
    * @param callbackScript - Name of the script to launch in the next BN.
    * @param bitNodeOptions - BitNode options for the next BN.
    */
-  b1tflum3(
-    nextBN: number,
-    callbackScript?: string,
-    bitNodeOptions?: BitNodeOptions,
-  ): void;
+  b1tflum3(nextBN: number, callbackScript?: string, bitNodeOptions?: BitNodeOptions): void;
 
   /**
    * Destroy the w0r1d_d43m0n and move on to the next BN.
@@ -2837,11 +2790,7 @@ export interface Singularity {
    * @param callbackScript - Name of the script to launch in the next BN.
    * @param bitNodeOptions - BitNode options for the next BN.
    */
-  destroyW0r1dD43m0n(
-    nextBN: number,
-    callbackScript?: string,
-    bitNodeOptions?: BitNodeOptions,
-  ): void;
+  destroyW0r1dD43m0n(nextBN: number, callbackScript?: string, bitNodeOptions?: BitNodeOptions): void;
 
   /**
    * Get the current work the player is doing.
@@ -3330,10 +3279,7 @@ declare enum SpecialBladeburnerActionTypeForSleeve {
  * @public
  */
 export type BladeburnerActionTypeForSleeve =
-  | Exclude<
-      BladeburnerGeneralActionName,
-      BladeburnerGeneralActionName.InciteViolence
-    >
+  | Exclude<BladeburnerGeneralActionName, BladeburnerGeneralActionName.InciteViolence>
   | SpecialBladeburnerActionTypeForSleeve;
 
 /**
@@ -3698,9 +3644,7 @@ export interface Bladeburner {
    * @param skillName - Name of skill. Case-sensitive and must be an exact match.
    * @returns Level in the specified skill.
    */
-  getSkillLevel(
-    skillName: BladeburnerSkillName | `${BladeburnerSkillName}`,
-  ): number;
+  getSkillLevel(skillName: BladeburnerSkillName | `${BladeburnerSkillName}`): number;
 
   /**
    * Get cost to upgrade skill.
@@ -3723,10 +3667,7 @@ export interface Bladeburner {
    * @param count - Number of times to upgrade the skill. Defaults to 1 if not specified.
    * @returns Number of skill points needed to upgrade the specified skill.
    */
-  getSkillUpgradeCost(
-    skillName: BladeburnerSkillName | `${BladeburnerSkillName}`,
-    count?: number,
-  ): number;
+  getSkillUpgradeCost(skillName: BladeburnerSkillName | `${BladeburnerSkillName}`, count?: number): number;
 
   /**
    * Upgrade skill.
@@ -3741,10 +3682,7 @@ export interface Bladeburner {
    * @param count - Number of times to upgrade the skill. Defaults to 1 if not specified.
    * @returns true if the skill is successfully upgraded, and false otherwise.
    */
-  upgradeSkill(
-    skillName: BladeburnerSkillName | `${BladeburnerSkillName}`,
-    count?: number,
-  ): boolean;
+  upgradeSkill(skillName: BladeburnerSkillName | `${BladeburnerSkillName}`, count?: number): boolean;
 
   /**
    * Get team size.
@@ -4472,11 +4410,7 @@ export interface GoAnalysis {
    *  @param playAsWhite - Optional. Whether to analyze the board state as if the white player is the current player. Defaults to false. Intended to be used when playing as white when the opponent is set to "No AI".
    *  @returns A 2D array of booleans indicating the validity of each move.
    */
-  getValidMoves(
-    boardState?: string[] | boolean,
-    priorBoardState?: string[],
-    playAsWhite?: boolean,
-  ): boolean[][];
+  getValidMoves(boardState?: string[] | boolean, priorBoardState?: string[], playAsWhite?: boolean): boolean[][];
 
   /**
    * Returns an ID for each point. All points that share an ID are part of the same network (or "chain"). Empty points
@@ -4842,45 +4776,45 @@ export interface Go {
   }>;
 
   /**
-     * Retrieves a simplified version of the board state. "X" represents black pieces, "O" white, and "." empty points.
-     * "#" are dead nodes that are not part of the subnet. (They are not territory nor open nodes.)
-     *
-     * For example, a 5x5 board might look like this:
-     *
-     [<br/>
-        "XX.O.",<br/>
-        "X..OO",<br/>
-        ".XO..",<br/>
-        "XXO.#",<br/>
-        ".XO.#",<br/>
-     ]
-     *
-     * Each string represents a vertical column on the board, and each character in the string represents a point.
-     *
-     * Traditional notation for Go is e.g. "B,1" referring to second ("B") column, first rank. This is the equivalent of index [1][0].
-     *
-     * Note that the [0][0] point is shown on the bottom-left on the visual board (as is traditional), and each
-     * string represents a vertical column on the board. In other words, the printed example above can be understood to
-     * be rotated 90 degrees clockwise compared to the board UI as shown in the IPvGO subnet tab.
-     *
-     * @remarks
-     * RAM cost: 4 GB
-     */
+   * Retrieves a simplified version of the board state. "X" represents black pieces, "O" white, and "." empty points.
+   * "#" are dead nodes that are not part of the subnet. (They are not territory nor open nodes.)
+   *
+   * For example, a 5x5 board might look like this:
+   *
+   [<br/>  
+      "XX.O.",<br/>  
+      "X..OO",<br/>  
+      ".XO..",<br/>  
+      "XXO.#",<br/>  
+      ".XO.#",<br/>  
+   ]
+   *
+   * Each string represents a vertical column on the board, and each character in the string represents a point.
+   *
+   * Traditional notation for Go is e.g. "B,1" referring to second ("B") column, first rank. This is the equivalent of index [1][0].
+   *
+   * Note that the [0][0] point is shown on the bottom-left on the visual board (as is traditional), and each
+   * string represents a vertical column on the board. In other words, the printed example above can be understood to
+   * be rotated 90 degrees clockwise compared to the board UI as shown in the IPvGO subnet tab.
+   *
+   * @remarks
+   * RAM cost: 4 GB
+   */
   getBoardState(): string[];
 
   /**
-     * Returns all the prior moves in the current game, as an array of simple board states.
-     *
-     * For example, a single 5x5 prior move board might look like this:
-     *
-     [<br/>
-        "XX.O.",<br/>
-        "X..OO",<br/>
-        ".XO..",<br/>
-        "XXO.#",<br/>
-        ".XO.#",<br/>
-     ]
-     */
+   * Returns all the prior moves in the current game, as an array of simple board states.
+   *
+   * For example, a single 5x5 prior move board might look like this:
+   *
+   [<br/>  
+      "XX.O.",<br/>  
+      "X..OO",<br/>  
+      ".XO..",<br/>  
+      "XXO.#",<br/>  
+      ".XO.#",<br/>  
+   ]
+   */
   getMoveHistory(): string[][];
 
   /**
@@ -4921,10 +4855,7 @@ export interface Go {
    * @param boardSize - The size of the board to play on. Must be 5, 7, 9, or 13.
    * @returns a simplified version of the board state as an array of strings representing the board columns. See ns.Go.getBoardState() for full details
    */
-  resetBoardState(
-    opponent: GoOpponent,
-    boardSize: 5 | 7 | 9 | 13,
-  ): string[] | undefined;
+  resetBoardState(opponent: GoOpponent, boardSize: 5 | 7 | 9 | 13): string[] | undefined;
 
   /**
    * Tools to analyze the IPvGO subnet.
@@ -5036,10 +4967,7 @@ export interface Sleeve {
    * @param crimeType - Name of the crime.
    * @returns True if this action was set successfully, false otherwise.
    */
-  setToCommitCrime(
-    sleeveNumber: number,
-    crimeType: CrimeType | `${CrimeType}`,
-  ): boolean;
+  setToCommitCrime(sleeveNumber: number, crimeType: CrimeType | `${CrimeType}`): boolean;
 
   /**
    * Set a sleeve to work for a faction.
@@ -5070,10 +4998,7 @@ export interface Sleeve {
    * @param companyName - Name of the company to work for.
    * @returns True if the sleeve started working for this company, false otherwise.
    */
-  setToCompanyWork(
-    sleeveNumber: number,
-    companyName: CompanyName | `${CompanyName}`,
-  ): boolean;
+  setToCompanyWork(sleeveNumber: number, companyName: CompanyName | `${CompanyName}`): boolean;
 
   /**
    * Set a sleeve to take a class at a university.
@@ -5197,9 +5122,7 @@ export interface Sleeve {
    */
   setToBladeburnerAction(
     sleeveNumber: number,
-    action:
-      | BladeburnerActionTypeForSleeve
-      | `${BladeburnerActionTypeForSleeve}`,
+    action: BladeburnerActionTypeForSleeve | `${BladeburnerActionTypeForSleeve}`,
     contract?: BladeburnerContractName,
   ): boolean;
 }
@@ -5321,18 +5244,11 @@ interface WorkStats {
  * @public
  */
 interface WorkFormulas {
-  crimeSuccessChance(
-    person: Person,
-    crimeType: CrimeType | `${CrimeType}`,
-  ): number;
+  crimeSuccessChance(person: Person, crimeType: CrimeType | `${CrimeType}`): number;
   /** @returns The WorkStats gained when completing one instance of the specified crime. */
   crimeGains(person: Person, crimeType: CrimeType | `${CrimeType}`): WorkStats;
   /** @returns The WorkStats applied every game cycle (200ms) by taking the specified gym class. */
-  gymGains(
-    person: Person,
-    gymType: GymType | `${GymType}`,
-    locationName: LocationName | `${LocationName}`,
-  ): WorkStats;
+  gymGains(person: Person, gymType: GymType | `${GymType}`, locationName: LocationName | `${LocationName}`): WorkStats;
   /** @returns The WorkStats applied every game cycle (200ms) by taking the specified university class. */
   universityGains(
     person: Person,
@@ -5340,11 +5256,7 @@ interface WorkFormulas {
     locationName: LocationName | `${LocationName}`,
   ): WorkStats;
   /** @returns The WorkStats applied every game cycle (200ms) by performing the specified faction work. */
-  factionGains(
-    person: Person,
-    workType: FactionWorkType | `${FactionWorkType}`,
-    favor: number,
-  ): WorkStats;
+  factionGains(person: Person, workType: FactionWorkType | `${FactionWorkType}`, favor: number): WorkStats;
   /** @returns The WorkStats applied every game cycle (200ms) by performing the specified company work. */
   companyGains(
     person: Person,
@@ -5439,12 +5351,7 @@ interface HackingFormulas {
    * @param cores - Number of cores on the computer that will execute grow.
    * @returns The calculated grow percent.
    */
-  growPercent(
-    server: Server,
-    threads: number,
-    player: Person,
-    cores?: number,
-  ): number;
+  growPercent(server: Server, threads: number, player: Person, cores?: number): number;
   /**
    * Calculate how many threads it will take to grow server to targetMoney. Starting money is server.moneyAvailable.
    * Note that when simulating the effect of {@link NS.grow | grow}, what matters is the state of the server and player
@@ -5460,12 +5367,7 @@ interface HackingFormulas {
    * @param cores - Number of cores on the computer that will execute grow.
    * @returns The calculated grow threads as an integer, rounded up.
    */
-  growThreads(
-    server: Server,
-    player: Person,
-    targetMoney: number,
-    cores?: number,
-  ): number;
+  growThreads(server: Server, player: Person, targetMoney: number, cores?: number): number;
   /**
    * Calculate the amount of money a grow action will leave a server with. Starting money is server.moneyAvailable.
    * Note that when simulating the effect of {@link NS.grow | grow}, what matters is the state of the server and player
@@ -5481,12 +5383,7 @@ interface HackingFormulas {
    * @param cores - Number of cores on the computer that will execute grow.
    * @returns The amount of money after the calculated grow.
    */
-  growAmount(
-    server: Server,
-    player: Person,
-    threads: number,
-    cores?: number,
-  ): number;
+  growAmount(server: Server, player: Person, threads: number, cores?: number): number;
   /**
    * Calculate hack time.
    * @param server - Server info, typically from {@link NS.getServer | getServer}
@@ -5523,12 +5420,7 @@ interface HacknetNodesFormulas {
    * @param mult - player production mult (default to 1)
    * @returns The calculated money gain rate.
    */
-  moneyGainRate(
-    level: number,
-    ram: number,
-    cores: number,
-    mult?: number,
-  ): number;
+  moneyGainRate(level: number, ram: number, cores: number, mult?: number): number;
   /**
    * Calculate cost of upgrading hacknet node level.
    * @param startingLevel - starting level
@@ -5536,11 +5428,7 @@ interface HacknetNodesFormulas {
    * @param costMult - player cost reduction (default to 1)
    * @returns The calculated cost.
    */
-  levelUpgradeCost(
-    startingLevel: number,
-    extraLevels?: number,
-    costMult?: number,
-  ): number;
+  levelUpgradeCost(startingLevel: number, extraLevels?: number, costMult?: number): number;
   /**
    * Calculate cost of upgrading hacknet node ram.
    * @param startingRam - starting ram
@@ -5548,11 +5436,7 @@ interface HacknetNodesFormulas {
    * @param costMult - player cost reduction (default to 1)
    * @returns The calculated cost.
    */
-  ramUpgradeCost(
-    startingRam: number,
-    extraLevels?: number,
-    costMult?: number,
-  ): number;
+  ramUpgradeCost(startingRam: number, extraLevels?: number, costMult?: number): number;
   /**
    * Calculate cost of upgrading hacknet node cores.
    * @param startingCore - starting cores
@@ -5560,11 +5444,7 @@ interface HacknetNodesFormulas {
    * @param costMult - player cost reduction (default to 1)
    * @returns The calculated cost.
    */
-  coreUpgradeCost(
-    startingCore: number,
-    extraCores?: number,
-    costMult?: number,
-  ): number;
+  coreUpgradeCost(startingCore: number, extraCores?: number, costMult?: number): number;
   /**
    * Calculate the cost of a hacknet node.
    * @param n - number of the hacknet node
@@ -5593,13 +5473,7 @@ interface HacknetServersFormulas {
    * @param mult - player production mult (default to 1)
    * @returns The calculated hash gain rate.
    */
-  hashGainRate(
-    level: number,
-    ramUsed: number,
-    maxRam: number,
-    cores: number,
-    mult?: number,
-  ): number;
+  hashGainRate(level: number, ramUsed: number, maxRam: number, cores: number, mult?: number): number;
   /**
    * Calculate cost of upgrading hacknet server level.
    * @param startingLevel - starting level
@@ -5607,11 +5481,7 @@ interface HacknetServersFormulas {
    * @param costMult - player cost reduction (default to 1)
    * @returns The calculated cost.
    */
-  levelUpgradeCost(
-    startingLevel: number,
-    extraLevels?: number,
-    costMult?: number,
-  ): number;
+  levelUpgradeCost(startingLevel: number, extraLevels?: number, costMult?: number): number;
   /**
    * Calculate cost of upgrading hacknet server ram.
    * @param startingRam - starting ram
@@ -5619,11 +5489,7 @@ interface HacknetServersFormulas {
    * @param costMult - player cost reduction (default to 1)
    * @returns The calculated cost.
    */
-  ramUpgradeCost(
-    startingRam: number,
-    extraLevels?: number,
-    costMult?: number,
-  ): number;
+  ramUpgradeCost(startingRam: number, extraLevels?: number, costMult?: number): number;
   /**
    * Calculate cost of upgrading hacknet server cores.
    * @param startingCore - starting cores
@@ -5631,11 +5497,7 @@ interface HacknetServersFormulas {
    * @param costMult - player cost reduction (default to 1)
    * @returns The calculated cost.
    */
-  coreUpgradeCost(
-    startingCore: number,
-    extraCores?: number,
-    costMult?: number,
-  ): number;
+  coreUpgradeCost(startingCore: number, extraCores?: number, costMult?: number): number;
   /**
    * Calculate cost of upgrading hacknet server cache.
    * @param startingCache - starting cache level
@@ -5682,11 +5544,7 @@ interface GangFormulas {
    * @param task - Gang info from {@link Gang.getTaskStats | getTaskStats}
    * @returns The calculated respect gain.
    */
-  respectGain(
-    gang: GangGenInfo,
-    member: GangMemberInfo,
-    task: GangTaskStats,
-  ): number;
+  respectGain(gang: GangGenInfo, member: GangMemberInfo, task: GangTaskStats): number;
   /**
    * Calculate wanted gain per tick.
    * @param gang - Gang info from {@link Gang.getGangInformation | getGangInformation}
@@ -5694,11 +5552,7 @@ interface GangFormulas {
    * @param task - Task info from {@link Gang.getTaskStats | getTaskStats}
    * @returns The calculated wanted gain.
    */
-  wantedLevelGain(
-    gang: GangGenInfo,
-    member: GangMemberInfo,
-    task: GangTaskStats,
-  ): number;
+  wantedLevelGain(gang: GangGenInfo, member: GangMemberInfo, task: GangTaskStats): number;
   /**
    * Calculate money gain per tick.
    * @param gang - Gang info from {@link Gang.getGangInformation | getGangInformation}
@@ -5706,11 +5560,7 @@ interface GangFormulas {
    * @param task - Task info from {@link Gang.getTaskStats | getTaskStats}
    * @returns The calculated money gain.
    */
-  moneyGain(
-    gang: GangGenInfo,
-    member: GangMemberInfo,
-    task: GangTaskStats,
-  ): number;
+  moneyGain(gang: GangGenInfo, member: GangMemberInfo, task: GangTaskStats): number;
 
   /**
    * Calculate ascension point gain.
@@ -5861,12 +5711,7 @@ interface Stanek {
    * @param fragmentId - ID of the fragment to place.
    * @returns true if the fragment can be placed at that position. false otherwise.
    */
-  canPlaceFragment(
-    rootX: number,
-    rootY: number,
-    rotation: number,
-    fragmentId: number,
-  ): boolean;
+  canPlaceFragment(rootX: number, rootY: number, rotation: number, fragmentId: number): boolean;
   /**
    * Place fragment on Stanek's Gift.
    * @remarks
@@ -5878,12 +5723,7 @@ interface Stanek {
    * @param fragmentId - ID of the fragment to place.
    * @returns true if the fragment can be placed at that position. false otherwise.
    */
-  placeFragment(
-    rootX: number,
-    rootY: number,
-    rotation: number,
-    fragmentId: number,
-  ): boolean;
+  placeFragment(rootX: number, rootY: number, rotation: number, fragmentId: number): boolean;
   /**
    * Get placed fragment at location.
    * @remarks
@@ -5962,9 +5802,7 @@ interface Infiltration {
    *
    * @returns Infiltration data for given location.
    */
-  getInfiltration(
-    location: LocationName | `${LocationName}`,
-  ): InfiltrationLocation;
+  getInfiltration(location: LocationName | `${LocationName}`): InfiltrationLocation;
 }
 
 /**
@@ -6100,12 +5938,7 @@ interface UserInterface {
    * @param host - Optional. Hostname of the target script. Defaults to the server this script is running on. If args are specified, this is not optional.
    * @param args - Arguments for the target script.
    */
-  setTailFontSize(
-    pixel?: number,
-    fn?: FilenameOrPID,
-    host?: string,
-    ...args: ScriptArg[]
-  ): void;
+  setTailFontSize(pixel?: number, fn?: FilenameOrPID, host?: string, ...args: ScriptArg[]): void;
 
   /**
    * Get the current window size
@@ -6557,11 +6390,7 @@ export interface NS {
    * @param cores - Optional. The number of cores of the server that would run grow.
    * @returns The security increase.
    */
-  growthAnalyzeSecurity(
-    threads: number,
-    hostname?: string,
-    cores?: number,
-  ): number;
+  growthAnalyzeSecurity(threads: number, hostname?: string, cores?: number): number;
 
   readonly heart: {
     /**
@@ -6817,11 +6646,7 @@ export interface NS {
    * @param args - Arguments to identify which scripts to get logs for.
    * @returns Returns a string array, where each line is an element in the array. The most recently logged line is at the end of the array.
    */
-  getScriptLogs(
-    fn?: FilenameOrPID,
-    host?: string,
-    ...args: ScriptArg[]
-  ): string[];
+  getScriptLogs(fn?: FilenameOrPID, host?: string, ...args: ScriptArg[]): string[];
 
   /**
    * Get an array of recently killed scripts across all servers.
@@ -7167,11 +6992,7 @@ export interface NS {
    * @param args - Additional arguments to pass into the new script that is being run. Note that if any arguments are being passed into the new script, then the second argument threadOrOptions must be filled in with a value.
    * @returns Returns the PID of a successfully started script, and 0 otherwise.
    */
-  run(
-    script: string,
-    threadOrOptions?: number | RunOptions,
-    ...args: ScriptArg[]
-  ): number;
+  run(script: string, threadOrOptions?: number | RunOptions, ...args: ScriptArg[]): number;
 
   /**
    * Start another script on any server.
@@ -7211,12 +7032,7 @@ export interface NS {
    * @param args - Additional arguments to pass into the new script that is being run. Note that if any arguments are being passed into the new script, then the third argument threadOrOptions must be filled in with a value.
    * @returns Returns the PID of a successfully started script, and 0 otherwise.
    */
-  exec(
-    script: string,
-    hostname: string,
-    threadOrOptions?: number | RunOptions,
-    ...args: ScriptArg[]
-  ): number;
+  exec(script: string, hostname: string, threadOrOptions?: number | RunOptions, ...args: ScriptArg[]): number;
 
   /**
    * Terminate current script and start another in a defined number of milliseconds.
@@ -7244,11 +7060,7 @@ export interface NS {
    * @param threadOrOptions - Either an integer number of threads for new script, or a {@link SpawnOptions} object. Threads defaults to 1 and spawnDelay defaults to 10,000 ms.
    * @param args - Additional arguments to pass into the new script that is being run.
    */
-  spawn(
-    script: string,
-    threadOrOptions?: number | SpawnOptions,
-    ...args: ScriptArg[]
-  ): void;
+  spawn(script: string, threadOrOptions?: number | SpawnOptions, ...args: ScriptArg[]): void;
 
   /**
    * Returns the currently running script.
@@ -7653,11 +7465,7 @@ export interface NS {
    * @param args - Arguments to specify/identify the script. Optional, when looking for scripts run without arguments.
    * @returns True if the specified script is running on the target server, and false otherwise.
    */
-  isRunning(
-    script: FilenameOrPID,
-    host?: string,
-    ...args: ScriptArg[]
-  ): boolean;
+  isRunning(script: FilenameOrPID, host?: string, ...args: ScriptArg[]): boolean;
 
   /**
    * Get general info about a running script.
@@ -7676,11 +7484,7 @@ export interface NS {
    * @param args  - Arguments to specify/identify the script. Optional, when looking for scripts run without arguments.
    * @returns The info about the running script if found, and null otherwise.
    */
-  getRunningScript(
-    filename?: FilenameOrPID,
-    hostname?: string,
-    ...args: ScriptArg[]
-  ): RunningScript | null;
+  getRunningScript(filename?: FilenameOrPID, hostname?: string, ...args: ScriptArg[]): RunningScript | null;
 
   /**
    * Change the current static RAM allocation of the script.
@@ -8207,12 +8011,7 @@ export interface NS {
    * @param isInteger - Whether the number represents an integer. Integers do not display fractional digits until a suffix is present. Optional, defaults to false.
    * @returns Formatted number.
    */
-  formatNumber(
-    n: number,
-    fractionalDigits?: number,
-    suffixStart?: number,
-    isInteger?: boolean,
-  ): string;
+  formatNumber(n: number, fractionalDigits?: number, suffixStart?: number, isInteger?: boolean): string;
 
   /**
    * Format a number as an amount of ram.
@@ -8245,11 +8044,7 @@ export interface NS {
    * @param suffixStart - When to switch the percentage to a multiplier. Default is 1e6 or x1.00m.
    * @returns Formatted percentage.
    */
-  formatPercent(
-    n: number,
-    fractionalDigits?: number,
-    suffixStart?: number,
-  ): string;
+  formatPercent(n: number, fractionalDigits?: number, suffixStart?: number): string;
 
   /**
    * Format a number using the numeral library. This function is deprecated and will be removed in a later version.
@@ -8365,11 +8160,7 @@ export interface NS {
    * @param variant - Type of toast. Must be one of success, info, warning, error. Defaults to success.
    * @param duration - Duration of toast in ms. Can also be `null` to create a persistent toast. Defaults to 2000.
    */
-  toast(
-    msg: string,
-    variant?: ToastVariant | `${ToastVariant}`,
-    duration?: number | null,
-  ): void;
+  toast(msg: string, variant?: ToastVariant | `${ToastVariant}`, duration?: number | null): void;
 
   /**
    * Download a file from the internet.
@@ -8559,9 +8350,7 @@ export interface NS {
    * // {"_":[],"delay":0,"server":"foodnstuff","exclude":[],"help":false,"v":true}
    * ```
    */
-  flags(schema: [string, string | number | boolean | string[]][]): {
-    [key: string]: ScriptArg | string[];
-  };
+  flags(schema: [string, string | number | boolean | string[]][]): { [key: string]: ScriptArg | string[] };
 
   /**
    * Share the server's ram with your factions.
@@ -8952,10 +8741,7 @@ export type CodingContractSignatures = {
   [CodingContractName.SpiralizeMatrix]: [number[][], number[]];
   [CodingContractName.ArrayJumpingGame]: [number[], 1 | 0];
   [CodingContractName.ArrayJumpingGameII]: [number[], number];
-  [CodingContractName.MergeOverlappingIntervals]: [
-    [number, number][],
-    [number, number][],
-  ];
+  [CodingContractName.MergeOverlappingIntervals]: [[number, number][], [number, number][]];
   [CodingContractName.GenerateIPAddresses]: [string, string[]];
   [CodingContractName.AlgorithmicStockTraderI]: [number[], number];
   [CodingContractName.AlgorithmicStockTraderII]: [number[], number];
@@ -8966,16 +8752,10 @@ export type CodingContractSignatures = {
   [CodingContractName.UniquePathsInAGridII]: [(1 | 0)[][], number];
   [CodingContractName.ShortestPathInAGrid]: [(1 | 0)[][], string];
   [CodingContractName.SanitizeParenthesesInExpression]: [string, string[]];
-  [CodingContractName.FindAllValidMathExpressions]: [
-    [string, number],
-    string[],
-  ];
+  [CodingContractName.FindAllValidMathExpressions]: [[string, number], string[]];
   [CodingContractName.HammingCodesIntegerToEncodedBinary]: [number, string];
   [CodingContractName.HammingCodesEncodedBinaryToInteger]: [string, number];
-  [CodingContractName.Proper2ColoringOfAGraph]: [
-    [number, [number, number][]],
-    (1 | 0)[],
-  ];
+  [CodingContractName.Proper2ColoringOfAGraph]: [[number, [number, number][]], (1 | 0)[]];
   [CodingContractName.CompressionIRLECompression]: [string, string];
   [CodingContractName.CompressionIILZDecompression]: [string, string];
   [CodingContractName.CompressionIIILZCompression]: [string, string];
@@ -9030,11 +8810,7 @@ export interface OfficeAPI {
    * @param employeePosition - Position to place into. Defaults to "Unassigned".
    * @returns True if an employee was hired, false otherwise
    */
-  hireEmployee(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    employeePosition?: CorpEmployeePosition,
-  ): boolean;
+  hireEmployee(divisionName: string, city: CityName | `${CityName}`, employeePosition?: CorpEmployeePosition): boolean;
 
   /**
    * Upgrade office size.
@@ -9046,11 +8822,7 @@ export interface OfficeAPI {
    * @param city - Name of the city
    * @param size - Amount of positions to open
    */
-  upgradeOfficeSize(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    size: number,
-  ): void;
+  upgradeOfficeSize(divisionName: string, city: CityName | `${CityName}`, size: number): void;
 
   /**
    * Throw a party for your employees.
@@ -9063,11 +8835,7 @@ export interface OfficeAPI {
    * @param costPerEmployee - Amount to spend per employee.
    * @returns Multiplier for morale, or zero on failure
    */
-  throwParty(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    costPerEmployee: number,
-  ): number;
+  throwParty(divisionName: string, city: CityName | `${CityName}`, costPerEmployee: number): number;
 
   /**
    * Buy tea for your employees.
@@ -9172,12 +8940,7 @@ export interface OfficeAPI {
    * @param amount - Number of employees to assign to that job
    * @returns true if the employee count reached the target amount, false if not
    */
-  setAutoJobAssignment(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    job: string,
-    amount: number,
-  ): boolean;
+  setAutoJobAssignment(divisionName: string, city: CityName | `${CityName}`, job: string, amount: number): boolean;
 
   /**
    * Get the cost to upgrade an office.
@@ -9190,11 +8953,7 @@ export interface OfficeAPI {
    * @param size - Amount of positions to open
    * @returns Cost of upgrading the office
    */
-  getOfficeSizeUpgradeCost(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    size: number,
-  ): number;
+  getOfficeSizeUpgradeCost(divisionName: string, city: CityName | `${CityName}`, size: number): number;
 }
 
 /**
@@ -9269,11 +9028,7 @@ export interface WarehouseAPI {
    * @param city - Name of the city
    * @param enabled - Use true to enable, false otherwise.
    */
-  setSmartSupply(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    enabled: boolean,
-  ): void;
+  setSmartSupply(divisionName: string, city: CityName | `${CityName}`, enabled: boolean): void;
 
   /**
    * Set whether smart supply uses leftovers before buying.
@@ -9304,12 +9059,7 @@ export interface WarehouseAPI {
    * @param materialName - Name of the material
    * @param amt - Amount of material to buy
    */
-  buyMaterial(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    materialName: string,
-    amt: number,
-  ): void;
+  buyMaterial(divisionName: string, city: CityName | `${CityName}`, materialName: string, amt: number): void;
 
   /**
    * Set material to bulk-buy.
@@ -9322,12 +9072,7 @@ export interface WarehouseAPI {
    * @param materialName - Name of the material
    * @param amt - Amount of material to buy
    */
-  bulkPurchase(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    materialName: string,
-    amt: number,
-  ): void;
+  bulkPurchase(divisionName: string, city: CityName | `${CityName}`, materialName: string, amt: number): void;
 
   /**
    * Get warehouse data.
@@ -9352,11 +9097,7 @@ export interface WarehouseAPI {
    * @param productName - Name of the product
    * @returns Product data
    */
-  getProduct(
-    divisionName: string,
-    cityName: CityName | `${CityName}`,
-    productName: string,
-  ): Product;
+  getProduct(divisionName: string, cityName: CityName | `${CityName}`, productName: string): Product;
 
   /**
    * Get material data.
@@ -9369,11 +9110,7 @@ export interface WarehouseAPI {
    * @param materialName - Name of the material
    * @returns Material data
    */
-  getMaterial(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    materialName: string,
-  ): Material;
+  getMaterial(divisionName: string, city: CityName | `${CityName}`, materialName: string): Material;
 
   /**
    * Set Market-TA1 for a material.
@@ -9386,12 +9123,7 @@ export interface WarehouseAPI {
    * @param materialName - Name of the material
    * @param on - Use true to enable, false otherwise.
    */
-  setMaterialMarketTA1(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    materialName: string,
-    on: boolean,
-  ): void;
+  setMaterialMarketTA1(divisionName: string, city: CityName | `${CityName}`, materialName: string, on: boolean): void;
 
   /**
    * Set Market-TA2 for a material.
@@ -9404,12 +9136,7 @@ export interface WarehouseAPI {
    * @param materialName - Name of the material
    * @param on - Use true to enable, false otherwise.
    */
-  setMaterialMarketTA2(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    materialName: string,
-    on: boolean,
-  ): void;
+  setMaterialMarketTA2(divisionName: string, city: CityName | `${CityName}`, materialName: string, on: boolean): void;
 
   /**
    * Set Market-TA1 for a product.
@@ -9421,11 +9148,7 @@ export interface WarehouseAPI {
    * @param productName - Name of the product
    * @param on - Use true to enable, false otherwise.
    */
-  setProductMarketTA1(
-    divisionName: string,
-    productName: string,
-    on: boolean,
-  ): void;
+  setProductMarketTA1(divisionName: string, productName: string, on: boolean): void;
 
   /**
    * Set Market-TA2 for a product.
@@ -9437,11 +9160,7 @@ export interface WarehouseAPI {
    * @param productName - Name of the product
    * @param on - Use true to enable, false otherwise.
    */
-  setProductMarketTA2(
-    divisionName: string,
-    productName: string,
-    on: boolean,
-  ): void;
+  setProductMarketTA2(divisionName: string, productName: string, on: boolean): void;
 
   /**
    * Set material export data.
@@ -9506,11 +9225,7 @@ export interface WarehouseAPI {
    * @param city - Name of the city
    * @param amt - Amount of upgrades. Defaults to 1.
    */
-  upgradeWarehouse(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    amt?: number,
-  ): void;
+  upgradeWarehouse(divisionName: string, city: CityName | `${CityName}`, amt?: number): void;
 
   /**
    * Create a new product.
@@ -9561,12 +9276,7 @@ export interface WarehouseAPI {
    * @param productName - Name of the product.
    * @param qty - Amount to limit to. Pass a negative value to remove the limit instead.
    */
-  limitProductProduction(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    productName: string,
-    qty: number,
-  ): void;
+  limitProductProduction(divisionName: string, city: CityName | `${CityName}`, productName: string, qty: number): void;
 
   /**
    * Get the cost to upgrade a warehouse to the next level.
@@ -9579,11 +9289,7 @@ export interface WarehouseAPI {
    * @param amt - Amount of upgrades. Optional. Defaults to 1.
    * @returns Cost to upgrade
    */
-  getUpgradeWarehouseCost(
-    divisionName: string,
-    city: CityName | `${CityName}`,
-    amt?: number,
-  ): number;
+  getUpgradeWarehouseCost(divisionName: string, city: CityName | `${CityName}`, amt?: number): number;
 
   /**
    * Check if you have a warehouse in city.
@@ -10464,9 +10170,7 @@ interface AutocompleteData {
   /** Netscript Enums */
   enums: NSEnums;
   /** Parses the flags schema on the already inputted flags */
-  flags(schema: [string, string | number | boolean | string[]][]): {
-    [key: string]: ScriptArg | string[];
-  };
+  flags(schema: [string, string | number | boolean | string[]][]): { [key: string]: ScriptArg | string[] };
   /** The hostname of the server the script would be running on */
   hostname: string;
   /** The filename of the script about to be run */
