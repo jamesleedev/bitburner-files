@@ -10,13 +10,13 @@ export function getHostFlag(
 
   let hostFlags = Object.entries(cmdFlags).filter((flag) => filter.includes(flag[0]));
 
-  let hostArgs = hostFlags
+  let hostArgs: string[] = hostFlags
     .map((flag) => {
       const arg = flag[1];
 
-      return arg instanceof Array ? [flag[0], arg[0]] : flag;
+      return Array.isArray(arg) ? (arg[0] as string) : (arg as string);
     })
-    .filter((flag) => flag[1] && flag[1] !== '');
+    .filter((arg) => arg !== '');
 
   if (hostArgs.length === 0) {
     if (printError) {
@@ -26,7 +26,7 @@ export function getHostFlag(
     return null;
   }
 
-  const host = hostArgs[0][1] as string;
+  const host = hostArgs[0] as string;
 
   return host;
 }

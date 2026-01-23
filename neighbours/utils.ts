@@ -16,8 +16,8 @@ export function getChildren(ns: NS, host: string = 'home', parent: string | null
   return children.length === 0 ? null : children;
 }
 
-export function getTree(ns: NS, depth: number = 1, start: string = 'home'): Node[] {
-  const tree: Node[] = [];
+export function getNodes(ns: NS, depth: number = 1, start: string = 'home'): Node[] {
+  const nodes: Node[] = [];
 
   let currentQueue: Node[] = [
     {
@@ -35,7 +35,7 @@ export function getTree(ns: NS, depth: number = 1, start: string = 'home'): Node
       const curr = currentQueue.shift() as Node;
       const children = getChildren(ns, curr.host, curr.parent);
 
-      tree.push({ ...curr, children });
+      nodes.push({ ...curr, children });
 
       if (children) {
         nextQueue = nextQueue.concat(
@@ -53,5 +53,5 @@ export function getTree(ns: NS, depth: number = 1, start: string = 'home'): Node
     currentQueue = nextQueue;
   }
 
-  return tree;
+  return nodes;
 }

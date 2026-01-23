@@ -1,4 +1,4 @@
-import { getTree } from 'neighbours/utils';
+import { getNodes } from 'neighbours/utils';
 
 export async function main(ns: NS) {
   const cmdFlags = ns.flags([
@@ -17,7 +17,7 @@ export async function main(ns: NS) {
   const nodes =
     singleHost && singleHost !== ''
       ? [singleHost]
-      : getTree(ns, depth).map((n) => {
+      : getNodes(ns, depth).map((n) => {
           return n.host;
         });
 

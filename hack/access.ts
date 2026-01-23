@@ -1,4 +1,4 @@
-import { getTree } from 'neighbours/utils';
+import { getNodes } from 'neighbours/utils';
 import { COLORS } from 'utils/colors';
 
 interface Cracks {
@@ -23,7 +23,7 @@ export async function main(ns: NS) {
     return crack[1].available;
   });
 
-  const nodes = getTree(ns, depth).map((n) => {
+  const nodes = getNodes(ns, depth).map((n) => {
     return n.host;
   });
   const hackingLevel = ns.getHackingLevel();
