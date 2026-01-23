@@ -1,5 +1,5 @@
 {
-  "allowedFiletypes": [".ts", ".tsx", ".js", ".jsx", ".script", ".txt"],
+  "allowedFiletypes": [".ts", ".tsx", ".txt"],
   "allowDeletingFiles": false,
   "exclude": ["node_modules", ".git", ".idea", ".github"],
   "port": 12525,
