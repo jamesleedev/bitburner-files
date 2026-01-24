@@ -1,4 +1,4 @@
-import { getNodes } from 'utils/neighbours';
+import { getHost } from 'utils/neighbours';
 import type { Flags } from 'utils/flags';
 
 const FLAGS: Flags = [
@@ -29,12 +29,7 @@ export async function main(ns: NS) {
   const singleHost = cmdFlags.host as string;
   const killAll = cmdFlags.kill as boolean;
 
-  const nodes =
-    singleHost && singleHost !== ''
-      ? [singleHost]
-      : getNodes(ns, depth).map((n) => {
-          return n.host;
-        });
+  const nodes = singleHost && singleHost !== '' ? [singleHost] : getHost(ns, depth);
 
   if (!scriptName) {
     ns.tprint('ERROR missing script name to propogate');

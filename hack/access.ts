@@ -1,4 +1,4 @@
-import { getNodes } from 'utils/neighbours';
+import { getHost } from 'utils/neighbours';
 import { COLORS } from 'utils/colors';
 import type { Flags } from 'utils/flags';
 
@@ -32,9 +32,7 @@ export async function main(ns: NS) {
     return crack[1].available;
   });
 
-  const nodes = getNodes(ns, depth).map((n) => {
-    return n.host;
-  });
+  const nodes = getHost(ns, depth);
   const hackingLevel = ns.getHackingLevel();
   const portsAvailable = Object.values(cracks).reduce((prev, curr) => {
     return prev + (curr.available ? 1 : 0);
