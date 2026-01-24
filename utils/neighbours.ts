@@ -28,7 +28,6 @@ export function getNodes(ns: NS, depth: number = 1, start: string = 'home'): Nod
   ];
 
   for (let i = 0; i < depth; i++) {
-    //ns.tprint(`INFO depth: `, i);
     let nextQueue: Node[] = [];
 
     while (currentQueue.length > 0) {
@@ -58,4 +57,19 @@ export function getNodes(ns: NS, depth: number = 1, start: string = 'home'): Nod
 
 export function getHost(ns: NS, depth: number = 1, start: string = 'home'): string[] {
   return getNodes(ns, depth, start).map((n) => n.host);
+}
+
+export function getFlatNodes(ns: NS, depth: number = 1, start: string = 'home'): FlatNode {
+  const nodes = getNodes(ns, depth, start);
+
+  const flatNodes: FlatNode = {};
+
+  for (const node of nodes) {
+    flatNodes[node.host] = {
+      parent: node.parent,
+      children: node.children,
+    };
+  }
+
+  return flatNodes;
 }

@@ -1,74 +1,87 @@
 import { COLORS } from 'utils/colors';
+import { type Node, getNodes } from '../utils/neighbours';
+import type { Flags } from '../utils/flags';
 
-interface Node {
+const FLAGS: Flags = [
+  ['depth', 1],
+  ['base', ''],
+];
+
+interface HostWithDepth {
   host: string;
-  parent: string | null;
-  children: string[] | null;
+  depth: number;
 }
 
 export async function main(ns: NS) {
-  const depth: number = (ns?.args[0] as number) > 1 ? (ns.args[0] as number) : 1;
-  const nodes = getTree(ns, depth);
+  const cmdFlags = ns.flags(FLAGS);
 
-  ns.tprint(nodes);
+  const depth = cmdFlags.depth as number;
+  const base = cmdFlags.base === '' ? 'home' : (cmdFlags.base as string);
 
-  nodes.map((node) => {
-    ns.tprint(`INFO node.host: `, node.host);
-  });
-}
+  const nodes = getNodes(ns, depth + 1, base);
+  const baseNode = nodes[0];
 
-function getChildren(ns: NS, host: string = 'home', parent: string | null = null): string[] | null {
-  const children = ns.scan(host).filter((n) => n !== parent);
+  let hosts: HostWithDepth[] = [{ host: base, depth: 0 }];
 
-  return children.length === 0 ? null : children;
-}
+  let queue: Node[] = nodes.filter((node) => baseNode?.children?.includes(node.host));
 
-function getTree(ns: NS, depth: number = 1, start: string = 'home'): Node[] {
-  const tree: Node[] = [];
+  while (queue.length > 0) {
+    const currentNode = queue.shift()!;
+    const host = currentNode.host;
+    const parent = currentNode.parent;
+    const nodeDepth = hosts.find((host) => host.host === parent)!.depth + 1;
+    const children = currentNode.children;
 
-  let currentQueue: Node[] = [
-    {
-      host: start,
-      children: null,
-      parent: null,
-    },
-  ];
+    if (children === null) {
+      hosts.push({ host, depth: nodeDepth });
+    } else {
+      if (nodeDepth <= depth) {
+        const childNodes = nodes.filter((node) => node.parent === host);
 
-  for (let i = 0; i < depth; i++) {
-    ns.tprint(`INFO depth: `, i);
-    let nextQueue: Node[] = [];
+        queue.unshift(...childNodes);
 
-    while (currentQueue.length > 0) {
-      const curr = currentQueue.shift() as Node;
-      const children = getChildren(ns, curr.host, curr.parent);
-
-      tree.push({ ...curr, children });
-
-      if (children) {
-        nextQueue = nextQueue.concat(
-          children.map((c) => {
-            return {
-              host: c,
-              parent: curr.host,
-              children: null,
-            };
-          })
-        );
+        hosts.push({ host, depth: nodeDepth });
       }
     }
-
-    currentQueue = nextQueue;
   }
 
-  return tree;
+  for (const host of hosts) {
+    printHostInfo(ns, host.host, host.depth);
+  }
 }
 
-function printHostInfo(ns: NS, host: string) {
-  const hasRoot = ns.hasRootAccess(host);
+function printHostInfo(ns: NS, host: string, depth: number) {
+  const server = {
+    root: ns.hasRootAccess(host),
+    ramMax: ns.getServerMaxRam(host),
+    ramUsed: ns.getServerUsedRam(host),
+    moneyMax: ns.getServerMaxMoney(host),
+    moneyAvail: ns.getServerMoneyAvailable(host),
+    securityMin: ns.getServerMinSecurityLevel(host),
+    securityCurr: ns.getServerSecurityLevel(host),
+    hackingLevel: ns.getServerRequiredHackingLevel(host),
+    portsNeeded: ns.getServerNumPortsRequired(host),
+  };
 
-  ns.tprintf(`${COLORS.CYAN}# ${host}${COLORS.RESET}`);
-  ns.tprintf(`* Max money: ${ns.formatNumber(ns.getServerMaxMoney(host))}`);
-  ns.tprintf(`* RAM: ${ns.formatRam(ns.getServerMaxRam(host))}`);
-  ns.tprintf(`${hasRoot ? COLORS.GREEN : COLORS.RED}* Root: ${hasRoot}${COLORS.RESET}`);
-  ns.tprintf('\n');
+  const moneyPercent = ns.formatPercent(server.moneyAvail !== 0 ? server.moneyAvail / server.moneyMax : 0);
+  const moneyMax = ns.formatNumber(server.moneyMax);
+  const securityDiff = server.securityCurr - server.securityMin;
+
+  const prefix = '-'.repeat(Math.max(depth * 2 - 2, 0)) + '-> ';
+
+  const hackingSuffix = server.root
+    ? ''
+    : ` | ${COLORS.RED}${server.hackingLevel} | ${server.portsNeeded}${COLORS.RESET}`;
+
+  ns.tprintf(
+    `${depth > 0 ? prefix : ''}` +
+      `${server.root ? COLORS.GREEN : COLORS.RED}${host}${COLORS.RESET}` +
+      ` | ${COLORS.CYAN}${ns.formatRam(server.ramMax)}${COLORS.RESET}` +
+      ` | ${COLORS.YELLOW}$${moneyMax}` +
+      ` | ${moneyPercent}%${COLORS.RESET}` +
+      ` | ${COLORS.MAGENTA}${server.securityMin}` +
+      ` | ${server.securityCurr}` +
+      ` | ${securityDiff}${COLORS.RESET}` +
+      hackingSuffix
+  );
 }
