@@ -3,6 +3,7 @@ import { type Node, getNodes } from '../utils/neighbours';
 import type { Flags } from '../utils/flags';
 
 const FLAGS: Flags = [
+  ['d', 0],
   ['depth', 1],
   ['base', ''],
 ];
@@ -15,7 +16,7 @@ interface HostWithDepth {
 export async function main(ns: NS) {
   const cmdFlags = ns.flags(FLAGS);
 
-  const depth = cmdFlags.depth as number;
+  const depth = Math.max(cmdFlags.depth as number, cmdFlags.d as number);
   const base = cmdFlags.base === '' ? 'home' : (cmdFlags.base as string);
 
   const nodes = getNodes(ns, depth + 1, base);
