@@ -68,7 +68,7 @@ function printHostInfo(ns: NS, host: string, depth: number) {
   const moneyMax = ns.formatNumber(server.moneyMax);
   const securityDiff = server.securityCurr - server.securityMin;
 
-  const prefix = '-'.repeat(Math.max(depth * 2 - 2, 0)) + '-> ';
+  const prefix = depth + '-'.repeat(Math.max(depth * 2 - 2, 0)) + '-> ';
 
   const hackingSuffix = server.root
     ? ''
