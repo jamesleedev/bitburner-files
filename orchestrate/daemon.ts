@@ -148,7 +148,6 @@ export async function main(ns: NS) {
           ns.print(`INFO: ### ${target.host} ${target.status}`);
           planSetupOperation(ns, target, currentRam, serverPool, mock);
         } else if (!prep) {
-          ns.print(`INFO: ### ${target.host} ${target.status}`);
           planHWGW(ns, target, serverPool, mock);
         }
       } else {
@@ -163,9 +162,9 @@ export async function main(ns: NS) {
 function planHWGW(ns: NS, target: Target, serverPool: ServerPooled[], mock: boolean = false) {
   const weakenPerThread = ns.weakenAnalyze(1);
 
-  const hackThreads = Math.floor(ns.hackAnalyzeThreads(target.host, target.moneyMax * HACK_PERCENTAGE));
+  const hackThreads = Math.max(Math.floor(ns.hackAnalyzeThreads(target.host, target.moneyMax * HACK_PERCENTAGE)), 1);
   const weaken1Threads = Math.max(Math.ceil(ns.hackAnalyzeSecurity(hackThreads, target.host) / weakenPerThread), 1);
-  const growThreads = Math.ceil(ns.growthAnalyze(target.host, 1 / (1 - HACK_PERCENTAGE)));
+  const growThreads = Math.max(Math.ceil(ns.growthAnalyze(target.host, 1 / (1 - HACK_PERCENTAGE))), 1);
   const weaken2Threads = Math.max(Math.ceil(ns.growthAnalyzeSecurity(growThreads) / weakenPerThread), 1);
 
   const totalThreadsNeeded = hackThreads + weaken1Threads + growThreads + weaken2Threads;
@@ -219,6 +218,8 @@ function planHWGW(ns: NS, target: Target, serverPool: ServerPooled[], mock: bool
     type: TARGET_STATUS.HACK,
     threads: hackRes.threads + weaken1Res.threads + growRes.threads + weaken2Res.threads,
   };
+
+  ns.print(`SUCCESS: ### ${target.host} ${target.status}`);
 }
 
 function planSetupOperation(
