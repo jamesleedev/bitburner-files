@@ -6,6 +6,9 @@ const FLAGS: Flags = [
   ['d', 0],
   ['depth', 1],
   ['base', ''],
+  ['external', false],
+  ['watch', -1],
+  ['legend', false],
 ];
 
 interface HostWithDepth {
@@ -13,13 +16,32 @@ interface HostWithDepth {
   depth: number;
 }
 
+export function autocomplete(data: AutocompleteData, args: string[]): string[] {
+  data.flags(FLAGS);
+
+  return [];
+}
+
 export async function main(ns: NS) {
   const cmdFlags = ns.flags(FLAGS);
 
   const depth = Math.max(cmdFlags.depth as number, cmdFlags.d as number);
   const base = cmdFlags.base === '' ? 'home' : (cmdFlags.base as string);
+  const external = cmdFlags.external as boolean;
+  const watch = cmdFlags.watch as number;
+  const watchEnabled = watch > 0;
+  const legend = cmdFlags.legend as boolean;
 
-  const nodes = getNodes(ns, depth + 1, base);
+  if (watchEnabled) {
+    ns.ui.openTail(ns.pid);
+    ns.atExit(() => ns.ui.closeTail(ns.pid));
+    ns.disableLog('ALL');
+    ns.enableLog('sleep');
+  }
+
+  const nodes = getNodes(ns, depth + 1, base).filter((node) =>
+    external ? !ns.getPurchasedServers().includes(node.host) : true
+  );
   const baseNode = nodes[0];
 
   let hosts: HostWithDepth[] = [{ host: base, depth: 0 }];
@@ -46,12 +68,24 @@ export async function main(ns: NS) {
     }
   }
 
-  for (const host of hosts) {
-    printHostInfo(ns, host.host, host.depth);
+  if (legend) {
+    printHeader(ns, watchEnabled);
+  }
+
+  while (true) {
+    for (const host of hosts) {
+      printHostInfo(ns, host.host, host.depth, watch > 0);
+    }
+
+    if (!watchEnabled) {
+      break;
+    }
+
+    await ns.sleep(watch * 1_000);
   }
 }
 
-function printHostInfo(ns: NS, host: string, depth: number) {
+function printHostInfo(ns: NS, host: string, depth: number, watch: boolean) {
   const server = {
     root: ns.hasRootAccess(host),
     ramMax: ns.getServerMaxRam(host),
@@ -76,17 +110,35 @@ function printHostInfo(ns: NS, host: string, depth: number) {
     ? ''
     : ` | ${COLORS.RED}${server.hackingLevel} | ${server.portsNeeded}${COLORS.RESET}`;
 
-  ns.tprintf(
+  const output =
     `${depth > 0 ? prefix : ''}` +
-      `${server.root ? COLORS.GREEN : COLORS.RED}${host}${COLORS.RESET}` +
-      ` | ${COLORS.CYAN}${ns.formatRam(server.ramMax)}${COLORS.RESET}` +
-      ` | ${COLORS.YELLOW}$${moneyMax}` +
-      ` | ${moneyPercent}%` +
-      ` | ${ns.tFormat(server.growTime)}${COLORS.RESET}` +
-      ` | ${COLORS.MAGENTA}${ns.formatNumber(server.securityMin, 2, 1000, true)}` +
-      ` | ${ns.formatNumber(server.securityCurr, 2, 1000, true)}` +
-      ` | ${ns.formatNumber(securityDiff, 2, 1000, true)}` +
-      ` | ${ns.tFormat(server.weakenTime)}${COLORS.RESET}` +
-      hackingSuffix
-  );
+    `${server.root ? COLORS.GREEN : COLORS.RED}${host}${COLORS.RESET}` +
+    ` | ${COLORS.CYAN}${ns.formatRam(server.ramMax)}${COLORS.RESET}` +
+    ` | ${COLORS.YELLOW}$${moneyMax}` +
+    ` | ${server.moneyMax - server.moneyAvail > 0 ? COLORS.RED : COLORS.GREEN}${moneyPercent}%${COLORS.RESET}${COLORS.YELLOW}` +
+    ` | ${ns.tFormat(server.growTime)}${COLORS.RESET}` +
+    ` | ${COLORS.MAGENTA}${ns.formatNumber(server.securityMin, 2, 1000, true)}` +
+    ` | ${ns.formatNumber(server.securityCurr, 2, 1000, true)}` +
+    ` | ${securityDiff === 0 ? COLORS.GREEN : COLORS.YELLOW}${ns.formatNumber(securityDiff, 2, 1000, true)}${COLORS.RESET}${COLORS.MAGENTA}` +
+    ` | ${ns.tFormat(server.weakenTime)}${COLORS.RESET}` +
+    hackingSuffix;
+
+  watch ? ns.printf(output) : ns.tprintf(output);
+}
+
+function printHeader(ns: NS, watch: boolean) {
+  const header =
+    `${COLORS.CYAN}Host${COLORS.RESET}` +
+    ` ${COLORS.WHITE}|${COLORS.RESET} ${COLORS.CYAN}RAM${COLORS.RESET}` +
+    ` ${COLORS.WHITE}|${COLORS.RESET} ${COLORS.YELLOW}Money${COLORS.RESET}` +
+    ` ${COLORS.WHITE}|${COLORS.RESET} ${COLORS.YELLOW}Money%%${COLORS.RESET}` +
+    ` ${COLORS.WHITE}|${COLORS.RESET} ${COLORS.YELLOW}Grow Time${COLORS.RESET}` +
+    ` ${COLORS.WHITE}|${COLORS.RESET} ${COLORS.MAGENTA}Min Sec${COLORS.RESET}` +
+    ` ${COLORS.WHITE}|${COLORS.RESET} ${COLORS.MAGENTA}Curr Sec${COLORS.RESET}` +
+    ` ${COLORS.WHITE}|${COLORS.RESET} ${COLORS.MAGENTA}Diff Sec${COLORS.RESET}` +
+    ` ${COLORS.WHITE}|${COLORS.RESET} ${COLORS.MAGENTA}Weaken Time${COLORS.RESET}` +
+    ` ${COLORS.WHITE}|${COLORS.RESET} ${COLORS.RED}[Hacking Lvl]${COLORS.RESET}` +
+    ` ${COLORS.WHITE}|${COLORS.RESET} ${COLORS.RED}[Ports]${COLORS.RESET}\n\n`;
+
+  watch ? ns.printf(header) : ns.tprintf(header);
 }
