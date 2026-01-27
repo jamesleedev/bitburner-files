@@ -121,8 +121,6 @@ export async function main(ns: NS) {
       .map(({ host, ram }) => Math.max(ram - ns.getServerUsedRam(host), 0))
       .reduce((acc, ram) => acc + ram, 0);
 
-    // ns.print(targets);
-
     targets = targets.sort((a, b) => {
       const scores = {
         [TARGET_STATUS.HACK]: 3,
