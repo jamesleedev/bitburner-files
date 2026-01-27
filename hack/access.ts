@@ -13,6 +13,8 @@ const FLAGS: Flags = [
   ['mock', false],
   ['d', -1],
   ['depth', 1],
+  ['verbose', false],
+  ['v', false],
 ];
 
 export function autocomplete(data: AutocompleteData, args: string[]): string[] {
@@ -26,6 +28,7 @@ export async function main(ns: NS) {
 
   const mock = cmdFlags.mock;
   const depth = Math.max(cmdFlags.d as number, cmdFlags.depth as number);
+  const verbose = (cmdFlags.verbose as boolean) || (cmdFlags.v as boolean);
 
   const cracks = getPortCracks(ns);
   const cracksAvail = Object.entries(cracks).filter((crack) => {
@@ -58,12 +61,14 @@ export async function main(ns: NS) {
     const securityCurr = ns.getServerSecurityLevel(host);
 
     ns.tprintf(`${COLORS.CYAN}= ${host}${COLORS.RESET}`);
-    ns.tprintf(`* Money Max: ${ns.formatNumber(serverMaxMoney)}`);
-    ns.tprintf(`* Money Avail: ${ns.formatNumber(serverCurrentMoney)}`);
-    ns.tprintf(`* Money Percent: %v`, ns.formatPercent(serverMoneyPercent));
-    ns.tprintf(`* Security Min: ${securityMin}`);
-    ns.tprintf(`* Security Current: ${securityCurr}`);
-    ns.tprintf(`* RAM: ${ns.formatRam(serverMaxRam)}`);
+    if (verbose) {
+      ns.tprintf(`* Money Max: ${ns.formatNumber(serverMaxMoney)}`);
+      ns.tprintf(`* Money Avail: ${ns.formatNumber(serverCurrentMoney)}`);
+      ns.tprintf(`* Money Percent: %v`, ns.formatPercent(serverMoneyPercent));
+      ns.tprintf(`* Security Min: ${securityMin}`);
+      ns.tprintf(`* Security Current: ${securityCurr}`);
+      ns.tprintf(`* RAM: ${ns.formatRam(serverMaxRam)}`);
+    }
 
     if (hasRoot) {
       ns.tprintf(`${COLORS.GREEN}# Already root${COLORS.RESET}`);
