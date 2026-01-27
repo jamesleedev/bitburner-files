@@ -58,8 +58,10 @@ function printHostInfo(ns: NS, host: string, depth: number) {
     ramUsed: ns.getServerUsedRam(host),
     moneyMax: ns.getServerMaxMoney(host),
     moneyAvail: ns.getServerMoneyAvailable(host),
+    growTime: ns.getGrowTime(host),
     securityMin: ns.getServerMinSecurityLevel(host),
     securityCurr: ns.getServerSecurityLevel(host),
+    weakenTime: ns.getWeakenTime(host),
     hackingLevel: ns.getServerRequiredHackingLevel(host),
     portsNeeded: ns.getServerNumPortsRequired(host),
   };
@@ -79,10 +81,12 @@ function printHostInfo(ns: NS, host: string, depth: number) {
       `${server.root ? COLORS.GREEN : COLORS.RED}${host}${COLORS.RESET}` +
       ` | ${COLORS.CYAN}${ns.formatRam(server.ramMax)}${COLORS.RESET}` +
       ` | ${COLORS.YELLOW}$${moneyMax}` +
-      ` | ${moneyPercent}%${COLORS.RESET}` +
-      ` | ${COLORS.MAGENTA}${server.securityMin}` +
-      ` | ${server.securityCurr}` +
-      ` | ${securityDiff}${COLORS.RESET}` +
+      ` | ${moneyPercent}%` +
+      ` | ${ns.tFormat(server.growTime)}${COLORS.RESET}` +
+      ` | ${COLORS.MAGENTA}${ns.formatNumber(server.securityMin, 2, 1000, true)}` +
+      ` | ${ns.formatNumber(server.securityCurr, 2, 1000, true)}` +
+      ` | ${ns.formatNumber(securityDiff, 2, 1000, true)}` +
+      ` | ${ns.tFormat(server.weakenTime)}${COLORS.RESET}` +
       hackingSuffix
   );
 }

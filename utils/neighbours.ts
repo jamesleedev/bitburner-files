@@ -55,8 +55,14 @@ export function getNodes(ns: NS, depth: number = 1, start: string = 'home'): Nod
   return nodes;
 }
 
-export function getHost(ns: NS, depth: number = 1, start: string = 'home'): string[] {
+export function getHosts(ns: NS, depth: number = 1, start: string = 'home'): string[] {
   return getNodes(ns, depth, start).map((n) => n.host);
+}
+
+export function getHostsWithRoot(ns: NS, depth: number = 1, start: string = 'home'): string[] {
+  return getNodes(ns, depth, start)
+    .filter((n) => ns.hasRootAccess(n.host))
+    .map((n) => n.host);
 }
 
 export function getFlatNodes(ns: NS, depth: number = 1, start: string = 'home'): FlatNode {

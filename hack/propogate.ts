@@ -1,5 +1,6 @@
-import { getHost } from 'utils/neighbours';
+import { getHosts } from 'utils/neighbours';
 import type { Flags } from 'utils/flags';
+import { getMaxScriptThreads } from '../utils/hack';
 
 const FLAGS: Flags = [
   ['script', ''],
@@ -31,7 +32,7 @@ export async function main(ns: NS) {
   const killAll = cmdFlags.kill as boolean;
   const includeHome = cmdFlags.home as boolean;
 
-  let nodes = singleHost && singleHost !== '' ? [singleHost] : getHost(ns, depth);
+  let nodes = singleHost && singleHost !== '' ? [singleHost] : getHosts(ns, depth);
 
   nodes = nodes.filter((host) => {
     if (!includeHome && host === 'home') {
@@ -57,7 +58,6 @@ export async function main(ns: NS) {
 
   for (const host of nodes) {
     let instances: number = 0;
-    const scriptRam = ns.getScriptRam(scriptName);
     const server: Record<string, any> = {
       maxRam: ns.getServerMaxRam(host),
       usedRam: ns.getServerUsedRam(host),
@@ -72,9 +72,9 @@ export async function main(ns: NS) {
     if (killAll) {
       ns.killall(host);
       ns.tprint(`SUCCESS ${host}: killing all scripts`);
-      instances = Math.floor(server.maxRam / scriptRam);
+      instances = getMaxScriptThreads(ns, scriptName, server.maxRam);
     } else {
-      instances = Math.floor(server.freeRam / scriptRam);
+      instances = getMaxScriptThreads(ns, scriptName, server.freeRam);
     }
 
     ns.scp(scriptName, host);
