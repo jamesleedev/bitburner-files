@@ -7,6 +7,7 @@ import {
   type ServerWithFreeThreads,
   type Target,
   type RunOperationOpts,
+  type Batch,
 } from 'types/orchestrate';
 
 const DELAY = 500;
@@ -93,7 +94,9 @@ export async function main(ns: NS) {
       })
     );
 
-  ns.print(`INFO: === Total RAM: ${ns.formatRam(totalRam)} ===`);
+  ns.print(
+    `INFO: === Total RAM: ${ns.formatRam(totalRam)}, Home RAM Total: ${ns.formatRam(ns.getServerMaxRam('home'))}, Home RAM Allocated: ${ns.formatRam(homeRamAllocated)} ===`
+  );
 
   while (true) {
     // for (let i = 0; i < 1; i++) {
@@ -123,7 +126,7 @@ export async function main(ns: NS) {
 
     targets = targets.sort((a, b) => {
       const scores = {
-        [TARGET_STATUS.HACK]: 3,
+        [TARGET_STATUS.HACK]: 4,
         [TARGET_STATUS.WEAKEN]: 2,
         [TARGET_STATUS.GROW]: 1,
       };
@@ -160,33 +163,108 @@ export async function main(ns: NS) {
 }
 
 function planHWGW(ns: NS, target: Target, serverPool: ServerPooled[], mock: boolean = false) {
+  const hasFormulas = ns.fileExists('Formulas.exe', 'home');
+
   const weakenPerThread = ns.weakenAnalyze(1);
-
-  const hackThreads = Math.max(Math.floor(ns.hackAnalyzeThreads(target.host, target.moneyMax * HACK_PERCENTAGE)), 1);
-  const weaken1Threads = Math.max(Math.ceil(ns.hackAnalyzeSecurity(hackThreads, target.host) / weakenPerThread), 1);
-  const growThreads = Math.max(Math.ceil(ns.growthAnalyze(target.host, 1 / (1 - HACK_PERCENTAGE))), 1);
-  const weaken2Threads = Math.max(Math.ceil(ns.growthAnalyzeSecurity(growThreads) / weakenPerThread), 1);
-
-  const totalThreadsNeeded = hackThreads + weaken1Threads + growThreads + weaken2Threads;
+  const securityIncreasePerHack = ns.hackAnalyzeSecurity(1, target.host);
+  const securityIncreasePerGrow = ns.growthAnalyzeSecurity(1, target.host);
 
   const hackTime = ns.getHackTime(target.host);
   const growTime = ns.getGrowTime(target.host);
   const weakenTime = ns.getWeakenTime(target.host);
 
-  const hackDelay = weakenTime - hackTime;
-  const weaken1Delay = OFFSET;
-  const growDelay = weakenTime - growTime + OFFSET * 2;
-  const weaken2Delay = OFFSET * 3;
+  const batch: Batch = {
+    hack: {
+      threads: Math.max(Math.ceil(ns.hackAnalyzeThreads(target.host, target.moneyMax * HACK_PERCENTAGE)), 1),
+      delay: weakenTime - hackTime,
+    },
+    weakenHack: {
+      threads: 1,
+      delay: OFFSET,
+    },
+    grow: {
+      threads: Math.max(Math.ceil(ns.growthAnalyze(target.host, 1 / (1 - HACK_PERCENTAGE - 0.05))), 1),
+      delay: weakenTime - growTime + OFFSET * 2,
+    },
+    weakenGrow: {
+      threads: 1,
+      delay: OFFSET * 3,
+    },
+  };
 
+  if (hasFormulas) {
+    const targetServer = ns.getServer(target.host);
+    const player = ns.getPlayer();
+
+    batch.hack.threads = Math.max(
+      Math.ceil(HACK_PERCENTAGE / ns.formulas.hacking.hackPercent(targetServer, player)),
+      1
+    );
+    batch.hack.delay =
+      ns.formulas.hacking.weakenTime(
+        {
+          ...targetServer,
+          hackDifficulty: target.securityMin + securityIncreasePerHack * batch.hack.threads,
+        },
+        player
+      ) - ns.formulas.hacking.hackTime(targetServer, player);
+
+    batch.weakenHack.threads = Math.max(
+      Math.ceil(ns.hackAnalyzeSecurity(batch.hack.threads, target.host) / weakenPerThread),
+      1
+    );
+
+    batch.grow.threads = Math.max(
+      ns.formulas.hacking.growThreads(
+        {
+          ...targetServer,
+          moneyAvailable:
+            (1 - ns.formulas.hacking.hackPercent(targetServer, player) * batch.hack.threads) * target.moneyMax,
+        },
+        player,
+        target.moneyMax
+      ),
+      1
+    );
+    batch.grow.delay =
+      ns.formulas.hacking.weakenTime(
+        {
+          ...targetServer,
+          hackDifficulty: target.securityMin + securityIncreasePerGrow * batch.grow.threads,
+        },
+        player
+      ) -
+      ns.formulas.hacking.growTime(
+        {
+          ...targetServer,
+          moneyAvailable:
+            (1 - ns.formulas.hacking.hackPercent(targetServer, player) * batch.hack.threads) * target.moneyMax,
+        },
+        player
+      ) +
+      OFFSET * 2;
+
+    batch.weakenGrow.threads = Math.max(Math.ceil(ns.growthAnalyzeSecurity(batch.grow.threads) / weakenPerThread), 1);
+  } else {
+    batch.weakenHack.threads = Math.max(
+      Math.ceil(ns.hackAnalyzeSecurity(batch.hack.threads, target.host) / weakenPerThread),
+      1
+    );
+    batch.weakenGrow.threads = Math.max(Math.ceil(ns.growthAnalyzeSecurity(batch.grow.threads) / weakenPerThread), 1);
+  }
+
+  const totalThreadsNeeded = Object.values(batch).reduce((acc, batchDetails) => acc + batchDetails.threads, 0);
+
+  // ns.print(`Host: ${target.host}`);
   // ns.print(`Weaken Per Thread: ${weakenPerThread}`);
-  // ns.print(`Hack Threads: ${hackThreads}`);
-  // const securityIncreaseAfterHack = ns.hackAnalyzeSecurity(hackThreads, target.host);
+  // ns.print(`Hack Threads: ${batch.hack.threads}`);
+  // const securityIncreaseAfterHack = ns.hackAnalyzeSecurity(batch.hack.threads, target.host);
   // ns.print(`Security Increase After Hack: ${securityIncreaseAfterHack}`);
-  // ns.print(`Weaken Threads After Hack: ${weaken1Threads}`);
-  // ns.print(`Grow Threads: ${growThreads}`);
-  // const securityIncreaseAfterGrow = ns.growthAnalyzeSecurity(growThreads);
+  // ns.print(`Weaken Threads After Hack: ${batch.weakenHack.threads}`);
+  // ns.print(`Grow Threads: ${batch.grow.threads}`);
+  // const securityIncreaseAfterGrow = ns.growthAnalyzeSecurity(batch.grow.threads);
   // ns.print(`Security Increase After Grow: ${securityIncreaseAfterGrow}`);
-  // ns.print(`Weaken Threads After Grow: ${weaken2Threads}`);
+  // ns.print(`Weaken Threads After Grow: ${batch.weakenGrow.threads}`);
   // ns.print(`${hackTime} (${ns.tFormat(hackTime)})`);
   // ns.print(`${growTime} (${ns.tFormat(growTime)})`);
   // ns.print(`${weakenTime} (${ns.tFormat(weakenTime)})`);
@@ -203,13 +281,17 @@ function planHWGW(ns: NS, target: Target, serverPool: ServerPooled[], mock: bool
     return;
   }
 
-  const hackRes = runOperation(ns, SCRIPTS.HACK, target.host, hackThreads, serverPool, { delay: hackDelay });
-  const weaken1Res = runOperation(ns, SCRIPTS.WEAKEN, target.host, weaken1Threads, serverPool, {
-    delay: weaken1Delay,
+  const hackRes = runOperation(ns, SCRIPTS.HACK, target.host, batch.hack.threads, serverPool, {
+    delay: batch.hack.delay,
   });
-  const growRes = runOperation(ns, SCRIPTS.GROW, target.host, growThreads, serverPool, { delay: growDelay });
-  const weaken2Res = runOperation(ns, SCRIPTS.WEAKEN, target.host, weaken2Threads, serverPool, {
-    delay: weaken2Delay,
+  const weaken1Res = runOperation(ns, SCRIPTS.WEAKEN, target.host, batch.weakenHack.threads, serverPool, {
+    delay: batch.weakenHack.delay,
+  });
+  const growRes = runOperation(ns, SCRIPTS.GROW, target.host, batch.grow.threads, serverPool, {
+    delay: batch.grow.delay,
+  });
+  const weaken2Res = runOperation(ns, SCRIPTS.WEAKEN, target.host, batch.weakenGrow.threads, serverPool, {
+    delay: batch.weakenGrow.delay,
   });
 
   target.activePids = [...hackRes.pids, ...weaken1Res.pids, ...growRes.pids, ...weaken2Res.pids];
@@ -323,12 +405,19 @@ function runOperation(
   } else {
     for (const server of servers) {
       if (server.threadsAvailable !== 0) {
-        const threadsToCreate = Math.min(server.threadsAvailable, threads - counter);
+        const threadsToCreate = Math.max(Math.min(server.threadsAvailable, threads - counter), 1);
+
+        // ns.print(`target: ${target}`);
+        // ns.print(`host: ${server.host}`);
+        // ns.print(`threadsToCreate: ${threadsToCreate}`);
+        // ns.print(`server.threadsAvailable: ${server.threadsAvailable}`);
+        // ns.print(`threads - counter: ${threads - counter}`);
+
         const pid = ns.exec(script, server.host, threadsToCreate, '--target', target, '--sleep-during', sleep);
         counter += threadsToCreate;
         pids.push(pid);
 
-        if (counter === threads) {
+        if (counter >= threads) {
           break;
         }
       }

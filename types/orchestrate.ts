@@ -36,3 +36,15 @@ export interface RunOperationOpts {
   spreadEvenly?: boolean;
   delay?: number;
 }
+
+export interface Batch {
+  hack: BatchDetails;
+  weakenHack: BatchDetails;
+  grow: BatchDetails;
+  weakenGrow: BatchDetails;
+}
+
+interface BatchDetails {
+  threads: number;
+  delay: number;
+}
