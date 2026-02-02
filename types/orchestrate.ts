@@ -1,7 +1,6 @@
 export enum TARGET_STATUS {
-  WEAKEN = 'WEAKEN',
-  GROW = 'GROW',
   HACK = 'HACK',
+  PREP = 'PREP',
 }
 
 export interface Target {
@@ -9,10 +8,6 @@ export interface Target {
   status: TARGET_STATUS;
   active: boolean;
   activePids: number[];
-  last?: {
-    type: TARGET_STATUS;
-    threads: number;
-  };
   ramMax: number;
   ramUsed: number;
   moneyMax: number;
